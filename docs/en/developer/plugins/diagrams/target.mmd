@@ -1,0 +1,10 @@
+flowchart TB
+    I["Gameplay and due callbacks"] --> G["Managed gameplay task<br/>prepare / await / validate / commit"]
+    G --> A["Dispatch and invocation admission<br/>ordering, context and limits"]
+    A --> S["Store driver<br/>stackless async tasks"]
+    S --> H["Host operations<br/>capabilities and resource translation"]
+    H --> C["Component calls<br/>resolved provider bindings"]
+    H --> O["Game-state operations<br/>route to authoritative owner"]
+    H --> E["External I/O<br/>async services"]
+    C --> P["Provider task<br/>same invocation rules"]
+    O --> W["Global / World<br/>Region / Entity"]

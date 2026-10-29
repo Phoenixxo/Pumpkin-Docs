@@ -201,6 +201,41 @@ export const en = defineConfig({
                         collapsed: true,
                         items: [
                             { text: "Overview", link: "/developer/plugins/" },
+                            { text: "Architecture", link: "/developer/plugins/design" },
+                            {
+                                text: "Runtime Concepts",
+                                collapsed: false,
+                                items: [
+                                    { text: "Invocations & Async Execution", link: "/developer/plugins/execution" },
+                                    { text: "Interfaces & Resources", link: "/developer/plugins/interfaces-and-resources" },
+                                    { text: "Events & Decisions", link: "/developer/plugins/events" },
+                                    { text: "Loading & Linking", link: "/developer/plugins/lifecycle-and-linking" },
+                                    { text: "Host Functions & Ownership", link: "/developer/plugins/host-integration" },
+                                ],
+                            },
+                            {
+                                text: "Development & Evolution",
+                                collapsed: true,
+                                items: [
+                                    { text: "Implementation Status", link: "/developer/plugins/implementation-status" },
+                                    { text: "Versions & Compatibility", link: "/developer/plugins/versioning" },
+                                    { text: "Migration", link: "/developer/plugins/migration" },
+                                    { text: "Testing the Runtime", link: "/developer/plugins/validation" },
+                                    { text: "Implementation Roadmap", link: "/developer/plugins/roadmap" },
+                                    {
+                                        text: "Design Decisions",
+                                        collapsed: true,
+                                        items: [
+                                            { text: "Decision Register", link: "/developer/plugins/decisions/" },
+                                            { text: "Async Execution", link: "/developer/plugins/decisions/0001-async-execution" },
+                                            { text: "Invocation Context", link: "/developer/plugins/decisions/0002-invocation-context" },
+                                            { text: "Event Decisions", link: "/developer/plugins/decisions/0003-event-decisions" },
+                                            { text: "Component Contracts", link: "/developer/plugins/decisions/0004-component-contracts" },
+                                            { text: "Contract Versioning", link: "/developer/plugins/decisions/0005-contract-versioning" },
+                                        ],
+                                    },
+                                ],
+                            },
                             { text: "Adding a Plugin Loader", link: "/developer/plugins/loaders" },
                             { text: "WASM Signing & Verification", link: "/developer/plugins/wasm-signing" },
                         ],

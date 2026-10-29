@@ -1,56 +1,37 @@
-# Plugin Engine Architecture
+# Plugin subsystem
 
-Pumpkin features a modular, multi-runtime plugin engine designed for performance, safety, and cross-language interoperability.
+Pumpkin runs plugin code in response to events, commands, scheduled callbacks, and calls from other plugins. The plugin subsystem loads that code, connects it to the server, and controls its execution and lifetime.
 
-Unlike traditional Minecraft servers that rely on a single JVM class loader, Pumpkin isolates plugin execution through dedicated loaders supporting both **native high-performance Rust binaries** and **sandboxed WebAssembly components** compiled from Rust, Python, C#, C, Go, or Kotlin.
+These chapters are for contributors working on the host and runtime. If you are writing a plugin, start with the [plugin development guide](/plugin-dev/introduction).
 
----
+::: info About this documentation
+The architecture chapters describe the proposed v0.2 subsystem. Its store drivers and host bindings already have implementations, while domain ownership, event capabilities, and general component linking remain work in progress. The [implementation status](./implementation-status) lists what exists at a pinned source revision. Retiring v0.1 is a migration goal, and no removal release has been announced.
+:::
 
-## Architectural Overview
+## How a plugin runs
 
-### Architectural Breakdown
+A Wasm plugin is distributed as a component. The component describes the functions it imports from its environment and exports to callers. Pumpkin supplies its host imports, creates an instance, and calls the instance's exports when work arrives.
 
-| Subsystem | Primary Crate | Responsibility |
-| :--- | :--- | :--- |
-| **Plugin Manager** | `crates/pumpkin/src/plugin` | Lifecycle orchestration (load, enable, disable), event dispatching, and loader registration |
-| **Native Loader** | `crates/pumpkin/src/plugin/loader/native` | Direct dynamic library loading (`.so`, `.dll`, `.dylib`) for zero-overhead Rust extensions |
-| **WASM Loader** | `crates/pumpkin/src/plugin/loader/wasm` | Wasmtime execution engine for sandboxed components compiled from Rust, Python, Go, C#, C, and Kotlin |
-| **Interface Specifications** | `crates/pumpkin-plugin-wit` | WebAssembly Interface Types (WIT) defining typed functions, types, and host imports |
-| **Security & Verification** | `crates/pumpkin/src/plugin/loader/wasm/sign` | Cryptographic signature verification via W3C wasmsign2 / Ed25519 public keys |
+For example, placing a block can trigger a plugin decision. The caller prepares the event, the plugin manager invokes registered handlers, and the host waits for the decision before committing placement. A handler can itself call a host function or another component. The runtime has to keep these calls moving without losing their relationship to the original placement.
 
----
+The [architecture chapter](./design) follows this path through the subsystem. [Execution](./execution) explains what happens when a call suspends, and [events](./events) explains how its result affects gameplay.
 
-## The Dual Execution Model
+## Components, instances, and stores
 
-| Feature | Native Plugins | WebAssembly (Wasmtime) Plugins |
-| :--- | :--- | :--- |
-| **File Extension** | `.so` (Linux), `.dll` (Windows), `.dylib` (macOS) | `.wasm` (Component Model) |
-| **Languages** | Rust (compiled dynamically) | Rust, Python, C#, C, Go, Kotlin |
-| **Performance** | Native CPU execution (zero overhead) | JIT-compiled with near-native speed |
-| **Sandboxing** | None (runs in host address space) | Memory-isolated sandboxed execution |
-| **Security & Signing** | OS-level permissions | Cryptographic W3C Wasm-Sign verification |
-| **Hot Unloading** | Limited (OS shared library constraints) | Fully supported memory reclamation |
+A component is executable code and its interface definitions. An instance is the live state created from that code. Instantiating the same component twice creates two independent sets of private state.
 
----
+Wasmtime keeps execution state in a **store**. Pumpkin's store driver controls access to it and runs guest calls. A store is separate from an execution domain: the store contains plugin state, while a domain owns authoritative game state such as a region's blocks and entities.
 
-## Event Lifecycle & Dispatching
+The distinction matters for libraries. A library can have a private instance for each consumer, or it can provide one deliberately shared service instance. The package name does not say which. [Lifecycle and linking](./lifecycle-and-linking) describes these choices.
 
-Plugins interact with Pumpkin primarily through events:
+Native plugins take a different loading path and run directly in the server process. The same plugin manager can manage them, but they get none of Wasm's memory isolation or interruption guarantees.
 
-1. **Event Dispatch**:
-   - `server.plugin_manager.fire_blocking(&server, &mut event)`: Dispatches events synchronously on the executing thread (e.g., cancelling player block placement or modifying packet payloads).
-   - Asynchronous events run on non-blocking Tokio tasks.
-2. **Cancellable Events**:
-   - Handlers can set `event.cancelled = true` to abort the default game logic (such as cancelling player movement, interactions, or packet processing).
+## Reading by topic
 
----
+For runtime work, read [execution](./execution), [interfaces and resources](./interfaces-and-resources), and [host integration](./host-integration). Together they explain invocation identity, resource lifetimes, and access to authoritative state.
 
-## Plugin Engine Documentation
+For public API work, read [events](./events), [versioning](./versioning), and [migration](./migration). These chapters cover observable behavior as well as function signatures.
 
-Explore the internal mechanics of Pumpkin's plugin system:
+For implementation planning, use the [status inventory](./implementation-status), [validation guide](./validation), [roadmap](./roadmap), and [decision records](./decisions/). Those pages track evidence, rationale, and implementation order separately from the architectural explanation.
 
-- **[Adding a Plugin Loader](/developer/plugins/loaders)**: Step-by-step guide on implementing the `PluginLoader` trait for new scripting languages and runtimes.
-- **[WASM Signing & Verification](/developer/plugins/wasm-signing)**: Detailed specification of Ed25519 cryptographic signing, W3C `wasmsign2` custom sections, and marketplace license verification.
-
-> [!NOTE]
-> Looking to develop third-party plugins rather than working on Pumpkin's internal plugin engine? Check out the **[Plugin Development Guide](/plugin-dev/introduction)**.
+The [loader guide](./loaders) and [signing guide](./wasm-signing) cover existing adjacent mechanisms. Check them against the server revision you are changing.

@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant O as Gameplay owner
+    participant M as Plugin manager
+    participant P as Component task
+    participant H as Host operations
+    O->>O: Prepare facts and decision invocation
+    O->>M: Dispatch with authority and deadline
+    M->>P: Admit callback
+    P->>H: Await an authorized operation
+    Note over O: Caller parks without world guards
+    H->>O: Enqueue owner-directed work
+    O-->>H: Validated operation result
+    H-->>P: Resume callback
+    P-->>M: Settle decision
+    M-->>O: Result or explicit failure
+    O->>O: Revalidate and commit or reject

@@ -1,0 +1,12 @@
+stateDiagram-v2
+    [*] --> Discovered
+    Discovered --> Validated: contracts and requirements
+    Validated --> Bound: dependencies resolved
+    Bound --> Active: activation succeeds
+    Bound --> Failed: activation fails
+    Active --> Retiring: stop new unrelated roots
+    Retiring --> Retired: calls and resources settled
+    Retiring --> Failed: bounded failure policy
+    Active --> Failed: trap or provider failure
+    Failed --> Retired: dependents and resources resolved
+    Retired --> [*]

@@ -1,0 +1,11 @@
+flowchart TB
+    S["Independent correctness fixes and baselines"] --> A["A. Invocation identity and lifecycle"]
+    A --> B["B. Async execution and SDK coverage"]
+    B --> C["C. Managed authoritative operations"]
+    C --> D["D. Resource and event contract"]
+    B --> E["E. Typed dependency binding"]
+    D --> F["F. Proxies and extension discovery"]
+    E --> F
+    C --> G["G. Region and entity ownership"]
+    F --> H["H. Combined validation and legacy removal"]
+    G --> H

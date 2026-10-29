@@ -1,0 +1,13 @@
+flowchart TB
+    T["Synchronous gameplay callers"] --> B["Synchronous runtime bridge"]
+    N["Async network, task and lifecycle callers"] --> M["Plugin manager"]
+    B --> M
+    M --> Native["Native callbacks<br/>trusted in-process code"]
+    M --> Q["Wasm store submission"]
+    Q --> Gate["Shared legacy root admission<br/>inherited chains reuse context"]
+    Gate --> S["v0.1 sequential driver"]
+    Gate --> C["v0.2 concurrent driver<br/>feature-gated"]
+    S --> H["Minecraft host implementations"]
+    C --> H
+    H --> W["Server and world objects<br/>internal synchronization"]
+    H -. "nested callbacks" .-> M

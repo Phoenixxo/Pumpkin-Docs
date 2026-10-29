@@ -1,5 +1,6 @@
 [files]
 extend-exclude = [
+    "docs/en/developer/plugins/diagrams/*.svg",
     "docs/nl/",
     "docs/.vitepress/nl.ts",
     "docs/pt/",

@@ -215,3 +215,15 @@ h1, h2, h3, h4, h5, h6 {
 .DocSearch {
   --docsearch-primary-color: var(--vp-c-brand-1) !important;
 }
+
+/* Preserve diagram labels at narrow widths */
+.vp-doc .plugin-diagram {
+  overflow-x: auto;
+  margin: 24px 0;
+}
+
+.vp-doc .plugin-diagram img {
+  width: 100%;
+  min-width: var(--diagram-min-width, 760px);
+  max-width: none;
+}

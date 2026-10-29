@@ -1,5 +1,7 @@
 # Pumpkin Architecture & Crates
 
+For the plugin host's execution boundaries, resources, lifecycle, and planned async architecture, see the [plugin subsystem design](/developer/plugins/design) and its [implementation status](/developer/plugins/implementation-status).
+
 Pumpkin is organized as a modular Cargo workspace composed of specialized crates. Each crate has distinct responsibilities, strictly defined boundaries, and minimal cross-dependencies.
 
 This architecture enables high parallel compilation speeds, isolated testing, zero-cost data sharing, and clean separation between network protocols, game logic, and world management.

@@ -41,7 +41,7 @@ Explore the contributor documentation to understand how Pumpkin works and how to
 | **[Items](/developer/items/)** | Item architecture, data components, food, cooldowns, and [adding item behaviors](/developer/items/adding-items). |
 | **[Entities & Mobs](/developer/entities/)** | Entity trait hierarchy, [spawning & tracking](/developer/entities/spawning-and-tracking), and [mob AI & pathfinding](/developer/entities/ai-and-mobs). |
 | **[Commands](/developer/commands/)** | Pure-Rust Brigadier command tree, [adding commands](/developer/commands/adding-commands), [arguments & suggestions](/developer/commands/arguments-and-suggestions), and [execution context](/developer/commands/execution-and-context). |
-| **[Plugin Engine](/developer/plugins/)** | Internal plugin engine architecture, [adding plugin loaders](/developer/plugins/loaders), and [WASM signing & licensing](/developer/plugins/wasm-signing). |
+| **[Plugin Engine](/developer/plugins/)** | [Subsystem design](/developer/plugins/design), [implementation status](/developer/plugins/implementation-status), runtime contracts, [adding plugin loaders](/developer/plugins/loaders), and [WASM signing & licensing](/developer/plugins/wasm-signing). |
 | **[World Engine & Formats](/developer/world)** | Chunk loading, saving, Anvil/Linear/Slime/Pump formats, terrain generation, and lighting. |
 | **[Code Generation](/developer/codegen)** | How `tools/pumpkin-codegen` processes vanilla Minecraft data to generate `pumpkin-data`. |
 | **[Porting Minecraft Versions](/developer/porting-versions)** | End-to-end guide to upgrading Pumpkin: data extraction, assets & datapacks, codegen, compiler fixes, new block/item/entity logic, and ViaVersion remapping. |
